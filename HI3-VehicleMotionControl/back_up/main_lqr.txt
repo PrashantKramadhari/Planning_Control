@@ -1,0 +1,203 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# TSFS12 Hand-in exercise 3: Path following for autonomous vehicles
+
+import numpy as np
+import matplotlib.pyplot as plt
+from vehiclecontrol import ControllerBase, SingleTrackModel, PurePursuitControllerBase, StateFeedbackControllerBase
+from splinepath import SplinePath
+from scipy.linalg import solve_discrete_are
+import math
+from seaborn import despine
+from scipy import linalg as la
+
+# Run if you want plots in external windows
+# %matplotlib
+plt.ion()
+
+# Run the ipython magic below to activate automated import of modules. Useful if you write code in external .py files.
+# %load_ext autoreload
+# %autoreload 2
+
+
+# Make a simple controller and simulate vehicle
+
+
+class MiniController(ControllerBase):
+    def __init__(self):
+        super().__init__()
+
+    def u(self, t, w):
+        a = 0.0
+        if t < 10:
+            u = [np.pi / 180 * 10, a]
+        elif 10 <= t < 20:
+            u = [-np.pi / 180 * 11, a]
+        elif 20 <= t < 23:
+            u = [-np.pi / 180 * 0, a]
+        elif 23 <= t < 40:
+            u = [-np.pi / 180 * 15, a]
+        else:
+            u = [-np.pi / 180 * 0, a]
+        return u
+
+
+opts = {"L": 2, "amax": np.inf, "amin": -np.inf, "steer_limit": np.pi / 3}
+
+car = SingleTrackModel().set_attributes(opts)
+car.Ts = 0.1
+car.controller = MiniController()
+w0 = [0, 0, 0, 2]
+z0 = car.simulate(w0, T=40, dt=0.1, t0=0.0)
+t, w, u = z0
+M = 10
+p = w[::M, 0:2]
+nom_path = SplinePath(p)
+
+
+# State feedback controller based on the linearized path
+
+# Implement linear and non-linear state feedback control.
+
+
+class LQR(StateFeedbackControllerBase):
+    def __init__(self, K, L, path=None, goal_tol=1.0, pursuit_point_fig =None):
+        super().__init__(pursuit_point_fig)
+        self.plan = path
+        self.K = K
+        self.goal_tol = goal_tol
+        self.d = 0
+        self.L = L
+        self.s0 = 0
+        self.u0=0
+        self.theta_e = 0
+        self.dt =  0.1
+        # LQR parameter
+        self.Q = np.eye(2)*1
+        self.R = 1
+
+
+    def heading_error(self, theta, s):
+        """Compute theta error
+        Inputs
+            theta - current heading angle
+            s - projection point on path
+
+        Outputs
+            theta_e - heading error angle
+        """
+
+        # YOUR CODE HERE
+        theta_e = 0.0
+        h_p, n_p = self.plan.heading(s)
+
+        h_p =  np.array([h_p[0],h_p[1]])
+        h_car = np.array([math.cos(theta), math.sin(theta)])
+        theta_e = math.atan2(np.cross(h_p,h_car), h_p.dot(h_car))
+
+        return theta_e
+
+    def u(self, t, w):
+        acc = 0
+        x, y, theta, v = w
+        p_car = w[0:2]
+
+        # Compute d and theta_e errors. Use the SplinePath method project
+        # and the obj.heading_error() function you've written above
+
+        # YOUR CODE HERE
+        s, d = self.plan.project(p_car, self.s0)
+
+        theta_e = self.heading_error(theta, s)
+
+        self.c_s = self.plan.c(s) #curvature of path
+
+        A = np.zeros((2, 2))
+        denom = (1 -d * self.c_s)
+        A[0, 0] = 0
+        A[0, 1] =v* math.cos(theta_e)
+        A[1, 0] = -v * (self.c_s**2) * math.cos(theta_e)/denom**2
+        A[1, 1] = v * math.sin(theta_e)/denom
+
+
+        B = np.zeros((2,1))
+        B [1,0]=v
+
+        X = la.solve_discrete_are(A, B, self.Q, self.R)
+
+        K = la.inv(B.T @ X @ B + self.R) @ (B.T @ X @ A)
+
+        x_ = np.zeros((2, 1))
+        x_[0, 0] = d
+        x_[1, 0] = theta_e
+
+
+        delta_ff  = math.atan2(self.c_s *self.L,1)
+        delta_fb = (-K @ x_)[0][0]
+
+        delta = delta_ff + delta_fb
+
+        self._plot(p_car)  # Included for animation purposes.
+        #for next cycle
+        if s < 79 :
+            self.s0 = s+0.5
+        self.d =d
+        self.theta_e = theta_e
+
+
+        return np.array([delta, acc])
+
+    def run(self, t, w):
+        p_goal = self.plan.path[-1, :]
+        p_car = w[0:2]
+        dp = p_car - p_goal
+        dist = np.sqrt(dp.dot(dp))
+        if dist < self.goal_tol:
+            return False
+        else :
+            return True
+
+
+        #return dist > self.goal_tol**2
+
+
+
+w0 = [0, 1, np.pi / 2 * 0.9, 2]
+kd= 1
+s = np.linspace(0, nom_path.length, 200)
+fig, ax = plt.subplots(num=99, clear=True)
+ax.plot(nom_path.x(s), nom_path.y(s), "b", lw=0.5)
+ax.plot(nom_path.path[:, 0], nom_path.path[:, 1], "rx", markersize=3)
+plt.show()
+
+lq = LQR(
+    K=kd, L=car.L, path=nom_path, goal_tol=0.25, pursuit_point_fig=fig)
+
+car = SingleTrackModel().set_attributes({"steer_limit": np.pi/4})
+car.controller = lq
+car.controller.Ts = 0.1
+
+z_lq = car.simulate(w0, T=80, dt=car.controller.Ts, t0=0.0)
+t, w, u = z_lq
+path_error = nom_path.path_error(w[:,0:2])
+
+s = np.linspace(0, lq.plan.length, 200)
+
+_, ax = plt.subplots(num=80, clear=True)
+ax.plot(lq.plan.x(s), lq.plan.y(s), 'b', lw=0.5)
+ax.plot(w[:, 0], w[:, 1], 'k')
+ax.set_title("Path length:{:.1f} m ".format(lq.plan.length))
+ax.set_xlabel("x [m]")
+ax.set_ylabel("y [m]")
+despine()
+
+
+_, ax = plt.subplots(num=81, clear=True)
+ax.plot(t, path_error, " b")
+ax.set_xlabel("t [s]")
+ax.set_ylabel("deg]")
+ax.set_title("path error")
+despine() 
+
+print("BP")
