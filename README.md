@@ -29,4 +29,4 @@ You can find the file ```requirements.txt``` in the ```Handin_Exercises``` folde
 
 
 
-Note : it was done couple of years back but uploaded now, so there might be some bugs and some incomplete part.I will finish this when time permits.
+Note : I tried to solve these HW in 2022 but uploaded now, so there might be some changes, bugs and some incomplete part.I will finish this when time permits.
