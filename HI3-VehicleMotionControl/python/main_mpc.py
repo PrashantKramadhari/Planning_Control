@@ -9,6 +9,8 @@ from vehiclecontrol import ControllerBase, SingleTrackModel, MPCBase
 from splinepath import SplinePath
 import casadi
 import math
+import matplotlib.animation as animation
+
 
 plt.ion()
 # %matplotlib  # Run if you want plots in external windows
@@ -274,6 +276,7 @@ s = np.linspace(0, nom_path.length, 200)
 fig, ax = plt.subplots(num=99, clear=True)
 ax.plot(nom_path.x(s), nom_path.y(s), "b", lw=0.5)
 ax.plot(nom_path.path[:, 0], nom_path.path[:, 1], "rx", markersize=3)
+
 plt.show()
 
 car = SingleTrackModel().set_attributes({"steer_limit": opts["steer_limit"]})
@@ -283,7 +286,6 @@ car.controller = mpc
 
 z_mpc = car.simulate(w0, T=80, dt=mpc.sample_rate, t0=0.0)
 print(f"Total time in controller: {mpc.u_time:.2f} sek")
-
 
 plt.show()
 

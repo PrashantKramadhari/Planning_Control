@@ -287,6 +287,30 @@ class PurePursuitControllerBase(ControllerBase):
             self._pp_fig.canvas.draw()
             self._pp_fig.canvas.flush_events()
 
+    def _pursuit_plot(self, p_car, p_purepursuit):
+        "Helper function to illustrate pursuit-point selection"
+
+        if self._pp_fig:  # Is pursuit-point illustration activated?
+            self._car_point[0].set_data([p_car[0]], [p_car[1]])  # Move car
+            self._pursuit_point[0].set_data(
+                [p_purepursuit[0]], [p_purepursuit[1]]
+            )  # Move pursuit-point
+            phi = np.linspace(0, 2 * np.pi, 40)
+            self._pursuit_horizon[0].set_data(
+                np.cos(phi) * self.l + p_car[0], np.sin(phi) * self.l + p_car[1]
+            )  # Horizon circle
+            dd = self._car_path[0].get_data()
+            self._car_path[0].set_data(
+                (np.hstack((dd[0], [p_car[0]])), np.hstack((dd[1], [p_car[1]])))
+            )  # Travelled path
+
+            # Update plot
+            self._pp_fig.canvas.draw()
+            self._pp_fig.canvas.flush_events()
+            #timestamp = int(time.time() * 1000)  # milliseconds
+            #self._pp_fig.savefig(f"./pp/pp_{timestamp}.png")
+
+
 class StateFeedbackControllerBase(ControllerBase):
     def __init__(self, car_point_fig=None):
         super().__init__()
@@ -310,6 +334,9 @@ class StateFeedbackControllerBase(ControllerBase):
             # Update plot
             self._pp_fig.canvas.draw()
             self._pp_fig.canvas.flush_events()
+            timestamp = int(time.time() * 1000)  # milliseconds
+            self._pp_fig.savefig(f"./sf/sf_{timestamp}.png")
+
 
 class MPCBase(ControllerBase):
     def __init__(self, car_point_fig=None):
@@ -334,6 +361,9 @@ class MPCBase(ControllerBase):
             # Update plot
             self._pp_fig.canvas.draw()
             self._pp_fig.canvas.flush_events()
+            timestamp = int(time.time() * 1000)  # milliseconds
+            self._pp_fig.savefig(f"./mpc/mpc_{timestamp}.png")
+
 
 
 
