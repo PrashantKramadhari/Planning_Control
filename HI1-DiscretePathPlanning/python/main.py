@@ -151,9 +151,9 @@ if flag_planner == 1 or flag_planner ==15:
         t.tic()
         
         unvis_node = -1
-        previous = np.full(num_nodes, dtype=np.int, fill_value=unvis_node)
+        previous = np.full(num_nodes, dtype=np.int16, fill_value=unvis_node)
         cost_to_come = np.zeros(num_nodes)
-        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int)
+        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int16)
 
         startNode = mission['start']['id']
         goalNode = mission['goal']['id']
@@ -256,9 +256,9 @@ if flag_planner == 2 or flag_planner ==15:
         t.tic()
         
         unvis_node = -1
-        previous = np.full(num_nodes, dtype=np.int, fill_value=unvis_node)
+        previous = np.full(num_nodes, dtype=np.int16, fill_value=unvis_node)
         cost_to_come = np.zeros(num_nodes)
-        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int)
+        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int16)
 
         startNode = mission['start']['id']
         goalNode = mission['goal']['id']
@@ -356,9 +356,9 @@ if flag_planner == 3 or flag_planner ==15:
         t.tic()
         
         unvis_node = -1
-        previous = np.full(num_nodes, dtype=np.int, fill_value=unvis_node)
+        previous = np.full(num_nodes, dtype=np.int16, fill_value=unvis_node)
         cost_to_come = np.zeros(num_nodes)
-        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int)
+        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int16)
 
         startNode = mission['start']['id']
         goalNode = mission['goal']['id']
@@ -463,9 +463,9 @@ if flag_planner == 4 or flag_planner ==15:
         t.tic()
         
         unvis_node = -1
-        previous = np.full(num_nodes, dtype=np.int, fill_value=unvis_node)
+        previous = np.full(num_nodes, dtype=np.int16, fill_value=unvis_node)
         cost_to_come = np.zeros(num_nodes)
-        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int)
+        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int16)
 
         startNode = mission['start']['id']
         goalNode = mission['goal']['id']
@@ -562,9 +562,9 @@ if flag_planner == 5 or flag_planner ==15:
         t.tic()
         
         unvis_node = -1
-        previous = np.full(num_nodes, dtype=np.int, fill_value=unvis_node)
+        previous = np.full(num_nodes, dtype=np.int16, fill_value=unvis_node)
         cost_to_come = np.zeros(num_nodes)
-        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int)
+        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int16)
 
         startNode = mission['start']['id']
         goalNode = mission['goal']['id']

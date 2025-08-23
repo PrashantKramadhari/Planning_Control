@@ -46,7 +46,7 @@ def sim_car(xk, u, step, h = 0.01, L=2, v=15):
     # Simulation with discretization using forward Euler
 
     t = 0
-    N = np.int(step / h) + 1
+    N = np.int16(step / h) + 1
     states = np.zeros((3, N))
     states[:, 0] = xk
 

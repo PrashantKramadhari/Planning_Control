@@ -101,7 +101,7 @@ def rrt_star_particle(start, goal, w, opts):
     T = Timer()
     T.tic()
     nodes = start.reshape((-1, 1))
-    parents = np.array([0], dtype=np.int)
+    parents = np.array([0], dtype=np.int16)
     cost = np.array([0])
     
     # YOUR CODE HERE
