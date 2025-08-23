@@ -12,7 +12,7 @@ from seaborn import despine
 from queues import PriorityQueue
 
 
-graph_ =5 # 1:BFS 2:DFS 3:Dijistra 4:Astar 5:BestFirst
+graph_ = 4 # 1:BFS 2:DFS 3:Dijistra 4:Astar 5:BestFirst
 
 # Run CasADi to pre-compute all motion primitives and save results in a pickle file for later re-use
 

@@ -9,9 +9,9 @@ def depth_first(num_nodes, mission, f_next, heuristic=None, num_controls=0):
         t.tic()
         
         unvis_node = -1
-        previous = np.full(num_nodes, dtype=np.int, fill_value=unvis_node)
+        previous = np.full(num_nodes, dtype=np.int32, fill_value=unvis_node)
         cost_to_come = np.zeros(num_nodes)
-        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int)
+        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int32)
 
         startNode = mission['start']['id']
         goalNode = mission['goal']['id']
@@ -60,9 +60,9 @@ def breadth_first(num_nodes, mission, f_next, heuristic=None, num_controls=0):
         t.tic()
         
         unvis_node = -1
-        previous = np.full(num_nodes, dtype=np.int, fill_value=unvis_node)
+        previous = np.full(num_nodes, dtype=np.int32, fill_value=unvis_node)
         cost_to_come = np.zeros(num_nodes)
-        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int)
+        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int32)
 
         startNode = mission['start']['id']
         goalNode = mission['goal']['id']
@@ -111,9 +111,9 @@ def dijkstra(num_nodes, mission, f_next, heuristic=None, num_controls=0):
         t.tic()
         
         unvis_node = -1
-        previous = np.full(num_nodes, dtype=np.int, fill_value=unvis_node)
+        previous = np.full(num_nodes, dtype=np.int32, fill_value=unvis_node)
         cost_to_come = np.zeros(num_nodes)
-        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int)
+        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int32)
 
         startNode = mission['start']['id']
         goalNode = mission['goal']['id']
@@ -162,9 +162,9 @@ def astar(num_nodes, mission, f_next, heuristic=None, num_controls=0):
         t.tic()
         
         unvis_node = -1
-        previous = np.full(num_nodes, dtype=np.int, fill_value=unvis_node)
+        previous = np.full(num_nodes, dtype=np.int32, fill_value=unvis_node)
         cost_to_come = np.zeros(num_nodes)
-        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int)
+        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int32)
 
         startNode = mission['start']['id']
         goalNode = mission['goal']['id']
@@ -215,9 +215,9 @@ def best_first(num_nodes, mission, f_next, heuristic=None, num_controls=0):
         t.tic()
         
         unvis_node = -1
-        previous = np.full(num_nodes, dtype=np.int, fill_value=unvis_node)
+        previous = np.full(num_nodes, dtype=np.int32, fill_value=unvis_node)
         cost_to_come = np.zeros(num_nodes)
-        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int)
+        control_to_come = np.zeros((num_nodes, num_controls), dtype=np.int32)
 
         startNode = mission['start']['id']
         goalNode = mission['goal']['id']
