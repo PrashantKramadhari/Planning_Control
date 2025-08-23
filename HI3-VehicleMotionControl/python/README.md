@@ -33,3 +33,4 @@ Run following python code to genrate plot.
 
 ![Screenshot](gif/mpc.gif)
 
+![Screenshot](gif/mpc.png)
