@@ -1,5 +1,16 @@
 My attempt of solving homework from the course taught at Liu TSFS12: Autonomous vehicles – planning, control, and learning systems
 
+HI1-DiscretePathPlanning
+[README](HI1-DiscretePathPlanning/python/README.md)
+
+
+HI2-PlanningDiffConstraints
+[README](HI2-PlanningDiffConstraints/python/README.md)
+
+
+HI3-VehicleMotionControl
+[README](HI3-VehicleMotionControl/python/README.md)
+
 
 # Python installation instructions
 
